@@ -12,6 +12,14 @@ public class Client {
 		//
 		// Strenge Implementierung gegen das Interface Translator gewuenscht!
 
+		// Verwendung Design Pattern: Factory Method
+		// Problem: Inkonsitente Objekt-Erzeugung
+		// Lösung / Vorteil: konsisente und zentrale Stelle zur objekt erzeugung
+		Translator translator = TranslateFactory.createGermanTranslator(); // new sollten wir nicht eigentlich
+		String result = translator.translateNumber(1);
+
+
+
 		System.out.println("Das Ergebnis der Berechnung: " +
 				"[das Ergebnis an dieser Stelle]"  );
 
