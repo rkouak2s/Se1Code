@@ -19,7 +19,7 @@ public class Client {
 		// Problem: Inkonsitente Objekt-Erzeugung
 		// Lösung / Vorteil: konsisente und zentrale Stelle zur objekt erzeugung
 		Translator translator = TranslateFactory.createGermanTranslator();
-		String result = translator.translateNumber(1);
+		String result = translator.translateNumber(aNumber);
 
 
 
