@@ -1,10 +1,22 @@
 package org.hbrs.se1.ws21.uebung2;
 
 import org.hbrs.se1.ws21.uebung2.exception.ContainerException;
+import org.hbrs.se1.ws21.uebung3.persistence.PersistenceException;
+import org.hbrs.se1.ws21.uebung3.persistence.PersistenceStrategyStream;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Container{
+
+    PersistenceStrategyStream<Member> pss = new PersistenceStrategyStream<>();
+    private static final Container containerInstance = new Container();
+
+    private Container(){}
+
+    public static Container getContainerInstance(){
+        return containerInstance;
+    }
 
     LinkedList<Member> containerMember = new LinkedList<>();
 
@@ -27,13 +39,15 @@ public class Container{
             return "ID nicht vorhanden";
     }
 
-    public void dump(){
-        for(Member member : containerMember){
-            System.out.println(member.toString());
-        }
-    }
-
     public int size(){
         return containerMember.size();
+    }
+
+    public void store() throws PersistenceException {
+        pss.save(containerMember);
+    }
+
+    public List<Member> getCurrentList(){
+        return containerMember;
     }
 }
