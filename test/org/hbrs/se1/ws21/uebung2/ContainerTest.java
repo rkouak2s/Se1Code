@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ContainerTest {
 
-    Container container = new Container();
+    Container container = Container.getContainerInstance();
         Member m1 = new MemberItem(11);
         Member m2 = new MemberItem(22);
         Member m3 = new MemberItem(33);
