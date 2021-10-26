@@ -1,9 +1,6 @@
 package org.hbrs.se1.ws21.uebung3.persistence;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      * and save
      */
     public void openConnection() throws PersistenceException {
-
+        throw new PersistenceException(PersistenceException.ExceptionType.ImplementationNotAvailable, "Not implemented!");
     }
 
     @Override
@@ -33,7 +30,7 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      * Method for closing the connections to a stream
      */
     public void closeConnection() throws PersistenceException {
-
+        throw new PersistenceException(PersistenceException.ExceptionType.ImplementationNotAvailable, "Not implemented!");
     }
 
     @Override
@@ -41,7 +38,20 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      * Method for saving a list of Member-objects to a disk (HDD)
      */
     public void save(List<Member> member) throws PersistenceException  {
+            FileOutputStream fos = null;
+            ObjectOutputStream oos = null;
+        try {
+            openConnection();
+            fos = new FileOutputStream(this.location);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(member);
 
+        } catch (IOException | PersistenceException e){
+            e.printStackTrace();
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Not connected!");
+        }finally {
+            closeConnection();
+        }
     }
 
     @Override
@@ -52,22 +62,30 @@ public class PersistenceStrategyStream<Member> implements PersistenceStrategy<Me
      */
     public List<Member> load() throws PersistenceException  {
         // Some Coding hints ;-)
-        // ObjectInputStream ois = null;
-        // FileInputStream fis = null;
-        // List<...> newListe =  null;
-        //
+         ObjectInputStream ois = null;
+         FileInputStream fis = null;
+         List<Member> newListe =  null;
+
         // Initiating the Stream (can also be moved to method openConnection()... ;-)
-        // fis = new FileInputStream( " a location to a file" );
-        // ois = new ObjectInputStream(fis);
+        try{
+            openConnection();
+             fis = new FileInputStream( this.location );
+             ois = new ObjectInputStream(fis);
 
-        // Reading and extracting the list (try .. catch ommitted here)
-        // Object obj = ois.readObject();
+             //Reading and extracting the list (try .. catch ommitted here)
+             Object obj = ois.readObject();
 
-        // if (obj instanceof List<?>) {
-        //       newListe = (List) obj;
-        // return newListe
-
-        // and finally close the streams (guess where this could be...?)
+             if (obj instanceof List<?>) {
+                 newListe = (List<Member>) obj;
+                 return newListe;
+             }
+            // and finally close the streams (guess where this could be...?)
+        } catch (ClassNotFoundException | PersistenceException | IOException e) {
+            e.printStackTrace();
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Not connected!");
+        }finally {
+            closeConnection();
+        }
         return null;
     }
 }
