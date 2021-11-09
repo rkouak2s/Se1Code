@@ -1,10 +1,9 @@
 package org.hbrs.se1.ws21.uebung4.prototype;
 
+import com.sun.org.apache.bcel.internal.classfile.EnclosingMethod;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -77,6 +76,17 @@ public class Container {
 		// Initialisierung des Eingabe-View
 		Scanner scanner = new Scanner( System.in );
 
+		Integer id = scanner.nextInt();
+		String vorname = scanner.next();
+		String nachname = scanner.next();
+		String rolle = scanner.next();
+		String abteilung = scanner.next();
+		String expertisen = scanner.next();
+
+		Employee employe = new Employee(id, vorname, nachname, rolle, abteilung, expertisen);
+		this.liste.add(employe);
+		this.store();
+
 		// Ausgabe eines Texts zur Begruessung
 		System.out.println("Employee-Tool V1.1 by Julius P. (dedicated to all my friends)");
 
@@ -91,7 +101,7 @@ public class Container {
 
 			// 	Falls 'help' eingegeben wurde, werden alle Befehle ausgedruckt
 			if ( strings[0].equals("help") ) {
-				System.out.println("Folgende Befehle stehen zur Verfuegung: help, dump....");
+				System.out.println("Folgende Befehle stehen zur Verfuegung: help, dump, enter, store, load, search, exit");
 			}
 			// Auswahl der bisher implementierten Befehle:
 			if ( strings[0].equals("dump") ) {
@@ -101,8 +111,37 @@ public class Container {
 			if ( strings[0].equals("enter") ) {
 				// Daten einlesen ...
 				// this.addEmployee( new Employee( data ) ) um das Objekt in die Liste einzufügen.
+				 this.addEmployee( new Employee( id, vorname, nachname, rolle, abteilung, expertisen ) );
 			}
-								
+
+			if ( strings[0].equals("search") ) {
+				if(strings[1].equals("Beginner")){
+					search("Beginner");
+				}
+				if(strings[1].equals("Experte")){
+					search("Experte");
+				}
+				if(strings[1].equals("Top-Perfomer")){
+					search("Top-Perfomer");
+				}
+			}
+
+			if ( strings[0].equals("exit") ) {
+				System.exit(0);
+			}
+
+			if ( strings[0].equals("load") ) {
+				if(strings[1].equals("merge")){
+					this.load();
+				}
+				if(strings[1].equals("force")){
+					for(Employee employee: this.liste){
+						this.liste.remove(employee);
+					}
+					this.load();
+				}
+			}
+
 			if (  strings[0].equals("store")  ) {
 				// Beispiel-Code
 				Employee employee = new Employee();
@@ -253,5 +292,13 @@ public class Container {
 			}
 		}
 		return null;
+	}
+
+	public void search(String expertise){
+		for(Employee employee: liste){
+			if(employee.getExpertise().equals(expertise)){
+				System.out.println(employee.toString());
+			}
+		}
 	}
 }
